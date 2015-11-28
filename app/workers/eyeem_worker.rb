@@ -2,7 +2,7 @@ class EyeemWorker < BaseWorker
   sidekiq_options unique: true, expiration: 5.minutes, retry: 5
 
   def perform(opts = {})
-    image = Sidekiq.redis do |redis| ;  redis.get("pending:#{ opts["stream_id"] }:#{ opts["image_name"] }") ; end || raise(StandardError, 'image not found')
+    return if (image = Sidekiq.redis do |redis| ;  redis.get("pending:#{ opts["stream_id"] }:#{ opts["image_name"] }") ; end).nil?
     image = JSON.parse(image)
 
     image['tags'] = begin
