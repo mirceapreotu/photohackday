@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="play">
+    <img class="latest_image" src="<%= current_stream.last['image_url'] %>" alt="<%= current_stream.last['image_name'] %>" />
+  </div>
+</div>
+
+<script type="text/javascript">
+  function reload()
+  {
+    window.location.reload();
+  }
+  delay_for = 5;
+  setTimeout(reload, delay_for*1000);
+</script>

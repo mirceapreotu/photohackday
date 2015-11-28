@@ -15,6 +15,7 @@ gem 'sinatra',             require: nil
 
 gem 'browser'
 
+
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use SCSS for stylesheets

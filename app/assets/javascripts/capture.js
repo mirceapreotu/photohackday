@@ -73,7 +73,7 @@
             ev.preventDefault();
         }, false);
 
-        clearphoto();
+        //clearphoto();
 
         // Send to backend
         record();

@@ -7,25 +7,25 @@ class ApplicationController < ActionController::Base
 
   before_filter :require_stream_name!, only: [:stream, :play, :record]
 
+  helper_method :all_streams, :current_stream
+
   def new_stream
     redirect_to stream_url(name: initialize_new_stream.id)
-  end
-
-  def stream
-  end
-
-  def play
   end
 
   def record
     current_stream.push(current_image)
 
     render json: {success: true}, status: 201
-  rescue
-    render json: { success: false }, status: 500
+  # rescue
+  #   render json: { success: false }, status: 500
   end
 
   private
+
+  def all_streams
+    Stream.all
+  end
 
   def mobile_or_desktop
     if browser.mobile?

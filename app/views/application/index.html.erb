@@ -1,3 +1,11 @@
-index page here (stream thumbs, add stream)
+<% all_streams.each do |stream| %>
+  <a href="<%= play_url(name: stream.id) %>">
+    <img src="<%= stream.last['image_url'] %>" alt="<%= stream.last['image_name'] %>" width="80" />
+  </a>
 
+  <br />
+<% end %>
+
+
+<br /><br />
 <a href="<%= new_stream_url %>">+ Create new stream</a>
