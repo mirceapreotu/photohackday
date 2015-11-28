@@ -5,14 +5,14 @@
 #
 # The default is the current directory.
 #
-directory '/srv/www/relevantmail'
+directory '/srv/www/photohackday'
 
 
 # Load “path” as a rackup file.
 #
 # The default is “config.ru”.
 #
-rackup '/srv/www/relevantmail/config.ru'
+rackup '/srv/www/photohackday/config.ru'
 
 
 # Set the environment in which the rack's app will run. The value must be a string.
@@ -32,20 +32,20 @@ daemonize true
 
 # Store the pid of the server in the file at "path".
 #
-pidfile '/srv/www/relevantmail/pids/relevantmail.pid'
+pidfile '/srv/www/photohackday/pids/photohackday.pid'
 
 
 # Use “path” as the file to store the server info state. This is
 # used by “pumactl” to query and control the server.
 #
-state_path '/srv/www/relevantmail/sockets/relevantmail.state'
+state_path '/srv/www/photohackday/sockets/photohackday.state'
 
 
 # Redirect STDOUT and STDERR to files specified. The 3rd parameter
 # (“append”) specifies whether the output is appended, the default is
 # “false”.
 #
-stdout_redirect '/srv/www/relevantmail/log/stdout.log', '/srv/www/relevantmail/log/stderr.log', true
+stdout_redirect '/srv/www/photohackday/log/stdout.log', '/srv/www/photohackday/log/stderr.log', true
 
 # Disable request logging.
 #
@@ -75,7 +75,7 @@ preload_app!
 #
 # The default is “tcp://0.0.0.0:9292”.
 #
-bind 'unix:///srv/www/relevantmail/sockets/relevantmail.sock'
+bind 'unix:///srv/www/photohackday/sockets/photohackday.sock'
 
 
 # Code to run before doing a restart. This code should
