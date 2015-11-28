@@ -87,8 +87,8 @@ class Stream
 
     # save to redis
     Sidekiq.redis do |redis|
-      json_data = JSON.generate({ image_name: "#{ image_name }.png", image_url: image_url, eyeem_location: eyeem_response[:location], created_at: current_time_in_timezone })
-      redis.set "images:#{ self.id }:#{ image_name }", json_data
+      json_data = JSON.generate({ image_name: "#{ image_name }.png", image_url: image_url, eyeem_location: eyeem_response[:location], tags: [], created_at: current_time_in_timezone })
+      redis.set "pending:#{ self.id }:#{ image_name }", json_data
     end
 
     # schedule worker in *retry seconds

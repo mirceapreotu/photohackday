@@ -1,6 +1,8 @@
 <div class="container">
   <div class="play">
     <img class="latest_image" src="<%= current_stream.last['image_url'] %>" alt="<%= current_stream.last['image_name'] %>" />
+    <br />
+    TAGS: <%= current_stream.last['tags'].join(', ') %>
   </div>
 </div>
 

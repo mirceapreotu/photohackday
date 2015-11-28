@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   post 'stream/record/(:name)' => 'application#record',     as: :record
   get  'stream/play/(:name)'   => 'application#play',       as: :play
 
-
+  mount Sidekiq::Web, at: '/sidekiq'
 
 
   # Example of regular route:
