@@ -1,0 +1,14 @@
+development:
+  timezone: 'Europe/Berlin'
+  redis_host: redis://172.16.16.120:6379
+  redis_namespace: photohackday_development
+  redis_poll_interval: 5
+  upload_directory: /www/photohackday/public/stream
+
+production:
+  timezone: 'Europe/Berlin'
+  redis_host: redis://hostname:port
+  redis_namespace: photohackday_production
+  redis_poll_interval: 1
+  upload_directory: /www/photohackday/public/stream
+

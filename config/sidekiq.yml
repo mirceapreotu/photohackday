@@ -1,0 +1,19 @@
+---
+:concurrency: 20
+:pidfile: tmp/pids/sidekiq.pid
+:verbose: true
+production:
+  :concurrency: 20
+  :verbose: false
+:queues:
+  - default
+
+## Sample configuration file for Sidekiq.
+## Options here can still be overridden by cmd line args.
+## sidekiq -C config/sidekiq_config.yml
+#---
+#:verbose: true
+#:concurrency: 1
+#:queues:
+#  - [default, 5]
+#  - [mailer, 1]
