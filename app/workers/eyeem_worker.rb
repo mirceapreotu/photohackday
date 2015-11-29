@@ -23,9 +23,9 @@ class EyeemWorker < BaseWorker
         redis.del "pending:#{ opts["stream_id"] }:#{ opts["image_name"] }"
       end
     elsif /HTTP\/1.1 404 Not Found/.match(eyeem_response)
-        retry_in = /{"location":(.*),"retryAfter":(.*)}/.match(eyeem_response)[2].to_i
-        EyeemWorker.perform_in retry_in, opts                      
-    else      
+      retry_in = /Retry-After: (.*)\r/.match(eyeem_response)[1].to_i
+      EyeemWorker.perform_in retry_in, opts
+    else
       raise StandardError, "eyeem api call failed (opts=#{ opts.to_yaml } ; response=#{ eyeem_response })"
     end
   end
