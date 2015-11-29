@@ -11,6 +11,13 @@ class EyeemWorker < BaseWorker
       parts         = /{"aestheticsScore":(.*),"concepts\":(.*)}/.match(eyeem_response)
       image['tags'] = JSON.parse(parts[2])
 
+      current_stream = Stream.find(opts['stream_id'])
+      notifications  = []
+      current_stream.subscriptions.each do |s|
+        notifications << s if image['tags'].include?(s)
+      end
+      current_stream.update({ notifications: notifications }) unless notifications.empty?
+
       Sidekiq.redis do |redis|
         redis.set "images:#{ opts["stream_id"] }:#{ opts["image_name"] }", JSON.generate(image)
         redis.del "pending:#{ opts["stream_id"] }:#{ opts["image_name"] }"

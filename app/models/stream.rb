@@ -106,7 +106,7 @@ class Stream
     # save to filesystem
     image_directory = "#{ Rails.application.config_for(:app_config)['upload_directory'] }/#{ id }"
     image_name      = current_time_in_timezone.to_i.to_s
-    image_url       = "#{ root_url }stream/#{ id }/#{ image_name }.png"
+    image_url       = "#{ root_url }images/#{ id }/#{ image_name }.png"
 
     FileUtils.mkdir_p(image_directory) unless File.directory?(image_directory)
     File.open("#{ image_directory }/#{ image_name }.png", "wb") { |f| f.write(image.read) }
