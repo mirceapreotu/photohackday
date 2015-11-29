@@ -1,18 +1,15 @@
 <div class="container">
   <% unless current_stream.notifications.empty? %>
-    <div class="alerts">
-      <h2>ALERT</h2>
-      The following items have been detected: <%= current_stream.notifications.join(', ') %>
-    </div>
-
-    <br />
+    <p class="alert">
+      ALERT!! The following items have been detected: <%= current_stream.notifications.join(', ') %>
+    </p>
   <% end %>
 
   <div class="play">
     <img class="latest_image" src="<%= current_stream.last['image_url'] %>" alt="<%= current_stream.last['image_name'] %>" />
-    <br />
-    TAGS: <%= current_stream.last['tags'].join(', ') %>
   </div>
+
+  TAGS: <%= current_stream.last['tags'].join(', ') %>
 </div>
 
 <script type="text/javascript">

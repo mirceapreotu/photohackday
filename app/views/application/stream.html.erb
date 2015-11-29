@@ -1,9 +1,8 @@
 <div class="container">
+  <p class="alert" style="font-size: 18px;margin:0px;margin-top:10px;">RECORDING</p>
+  <br /><br />
+
   <div class="camera">
-    <strong>RECORDING</strong>
-
-    <br /><br />
-
     <video id="video">Video stream not available.</video>
     <button id="startbutton" style="display: none">Take photo</button>
   </div>
@@ -12,11 +11,11 @@
 
   <br /><br /><br />
 
-  <div class="subscriptions">
-    <form name="subscriptionsForm" id="subscriptionsForm" action="<%= update_alerts_url(name: current_stream.id) %>" method="POST">
+  <div class="subscriptionsForm">
+    <form action="<%= update_alerts_url(name: current_stream.id) %>" method="POST">
       <label>Each time any of these items shows up you will receive an alert message</label>
       <br />
-      <textarea name="subscriptions" id="subscriptions" style="width: 200px;height:250px;"><%= current_stream.notifications.join("\n") %></textarea>
+      <textarea name="subscriptions" id="subscriptions" style="width: 640px;height:100px;"><%= current_stream.notifications.join("\n") %></textarea>
     </form>
   </div>
 </div>

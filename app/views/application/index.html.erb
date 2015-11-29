@@ -1,16 +1,21 @@
-<% if active_streams.empty? %>
-  There are no active streams
-<% else %>
-  <% active_streams.each do |stream| %>
-    <a href="<%= play_url(name: stream.id) %>">
-      <img src="<%= stream.last['image_url'] %>" alt="<%= stream.last['image_name'] %>" width="80" />
-    </a>
+<div class="container">
+  <% if active_streams.empty? %>
+    <h2>There are no active streams</h2>
+  <% else %>
+    <ul>
+      <h2>Active streams</h2>
+      <% active_streams.each do |stream| %>
+          <li><a href="<%= play_url(name: stream.id) %>"><img src="<%= stream.last['image_url'] %>" alt="<%= stream.last['image_name'] %>" width="250" /></a></li>
+      <% end %>
+    </ul>
 
-    <br />
+    <div style="clear:both;"></div>
   <% end %>
-<% end %>
 
+  <br /><br /><br />
 
+  <div style="text-align: center; font-size:25px;">
+    <a href="<%= new_stream_url %>" style="text-decoration: none;">+ Create new stream</a>
+  </div>
 
-<br /><br />
-<a href="<%= new_stream_url %>">+ Create new stream</a>
+</div>
