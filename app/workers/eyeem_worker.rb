@@ -3,19 +3,23 @@ class EyeemWorker < BaseWorker
 
   def perform(opts = {})
     return if (image = Sidekiq.redis do |redis| ;  redis.get("pending:#{ opts["stream_id"] }:#{ opts["image_name"] }") ; end).nil?
-    image = JSON.parse(image)
 
-    image['tags'] = begin
-      res   = `curl -i -XGET #{ image['eyeem_location'] } -H "Authorization: #{ Rails.application.config_for(:app_config)['eyeem_api_token'] }"`
-      raise StandardError, "eyeem api call failed (response=#{ res })" unless /HTTP\/1.1 200 OK/.match(res)
+    image          = JSON.parse(image)
+    eyeem_response = `curl -i -XGET #{ image['eyeem_location'] } -H "Authorization: #{ Rails.application.config_for(:app_config)['eyeem_api_token'] }"`
 
-      parts = /{"aestheticsScore":(.*),"concepts\":(.*)}/.match(res)
-      JSON.parse(parts[2])
-    end
+    if /HTTP\/1.1 200 OK/.match(eyeem_response)
+      parts         = /{"aestheticsScore":(.*),"concepts\":(.*)}/.match(eyeem_response)
+      image['tags'] = JSON.parse(parts[2])
 
-    Sidekiq.redis do |redis|
-      redis.set "images:#{ opts["stream_id"] }:#{ opts["image_name"] }", JSON.generate(image)
-      redis.del "pending:#{ opts["stream_id"] }:#{ opts["image_name"] }"
+      Sidekiq.redis do |redis|
+        redis.set "images:#{ opts["stream_id"] }:#{ opts["image_name"] }", JSON.generate(image)
+        redis.del "pending:#{ opts["stream_id"] }:#{ opts["image_name"] }"
+      end
+    elsif /HTTP\/1.1 404 Not Found/.match(eyeem_response)
+        retry_in = /{"location":(.*),"retryAfter":(.*)}/.match(eyeem_response)[2].to_i
+        EyeemWorker.perform_in retry_in, opts                      
+    else      
+      raise StandardError, "eyeem api call failed (opts=#{ opts.to_yaml } ; response=#{ eyeem_response })"
     end
   end
 end
