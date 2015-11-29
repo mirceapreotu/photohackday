@@ -5,9 +5,9 @@ class ApplicationController < ActionController::Base
 
   layout :mobile_or_desktop, only: :stream
 
-  before_filter :require_stream_name!, only: [:stream, :play, :record]
+  before_filter :require_stream_name!, only: [:stream, :play, :record, :update_alerts]
 
-  helper_method :all_streams, :current_stream
+  helper_method :active_streams, :current_stream
 
   def new_stream
     redirect_to stream_url(name: initialize_new_stream.id)
@@ -17,14 +17,24 @@ class ApplicationController < ActionController::Base
     current_stream.push(current_image)
 
     render json: {success: true}, status: 201
-  # rescue
-  #   render json: { success: false }, status: 500
+  rescue
+    render json: { success: false }, status: 500
+  end
+
+  def update_alerts
+    subscriptions = params.require(:subscriptions).split("\r\n").map{ |s| s.lstrip.rstrip  }.reject{ |s| s.empty? }
+
+    current_stream.update({ subscriptions: subscriptions })
+
+    render json: {success: true}, status: 200
+  rescue
+    render json: { success: false }, status: 500
   end
 
   private
 
-  def all_streams
-    Stream.all
+  def active_streams
+    Stream.active
   end
 
   def mobile_or_desktop

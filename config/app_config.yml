@@ -5,7 +5,7 @@ development:
   redis_host: redis://172.16.16.120:6379
   redis_namespace: photohackday_development
   redis_poll_interval: 5
-  upload_directory: /www/photohackday/public/stream
+  upload_directory: /www/photohackday/public/images
   eyeem_api_host: https://vision.eyeem.com/photohackday/photos
   eyeem_api_token: PHOTOHACKDAY-MEGr4wo8UkMP4w
 
@@ -16,7 +16,7 @@ production:
   redis_host: redis://127.0.0.1:6379
   redis_namespace: photohackday_production
   redis_poll_interval: 1
-  upload_directory: /srv/www/photohackday/public/stream
+  upload_directory: /srv/www/photohackday/public/images
   eyeem_api_host: https://vision.eyeem.com/photohackday/photos
   eyeem_api_token: PHOTOHACKDAY-MEGr4wo8UkMP4w
 

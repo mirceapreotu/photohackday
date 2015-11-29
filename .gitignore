@@ -45,4 +45,4 @@ Guardfile
 /tmp
 /pids
 /sockets
-/public/stream
+/public/images

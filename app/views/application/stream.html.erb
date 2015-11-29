@@ -9,4 +9,45 @@
   </div>
 
   <canvas id="canvas"></canvas>
+
+  <br /><br /><br />
+
+  <div class="subscriptions">
+    <form name="subscriptionsForm" id="subscriptionsForm" action="<%= update_alerts_url(name: current_stream.id) %>" method="POST">
+      <label>Each time any of these items shows up you will receive an alert message</label>
+      <br />
+      <textarea name="subscriptions" id="subscriptions" style="width: 200px;height:250px;"><%= current_stream.notifications.join("\n") %></textarea>
+    </form>
+  </div>
 </div>
+
+<script type="application/javascript">
+  $(document).ready(function(){
+    $('#subscriptions').keydown(function(event) {
+      if (event.keyCode == 13) {
+        $(this.form).submit();
+      }
+    });
+
+    $('form').submit(function(e) {
+      var self = $(this);
+
+      e.preventDefault();
+
+      $.ajax({
+        url     : self.attr('action'),
+        type    : self.attr('method'),
+        dataType: 'json',
+        data    : self.serialize(),
+        success : function(data) {
+          console.debug("SUCCESS")
+        },
+        error   : function(xhr, err) {
+          console.debug("ERROR "+xhr.responseText)
+        }
+      });
+    });
+
+
+  });
+</script>

@@ -12,17 +12,22 @@ class Stream
 
   attr_accessor :id
   attr_accessor :meta
-  attr_accessor :alerts
+
+  attr_accessor :subscriptions
+  attr_accessor :notifications
 
   def initialize(options = {})
     options.each { |acc, value| send("#{ acc }=", value) }
   end
 
-  def self.all
+  def self.active
     streams = []
     Sidekiq.redis do |redis|
       redis.keys("streams:*").each do |key|
-        streams << self.find(key.gsub('streams:', ''))
+        stream_id = key.gsub('streams:', '')
+        next if self.stream_empty?(stream_id)
+
+        streams << self.find(stream_id)
       end
     end
     streams
@@ -35,6 +40,32 @@ class Stream
     self.new({ id: id, meta: meta })
   end
 
+  def update(opts = {})
+    opts.each do |key, value| ; meta[key.to_s] = value ; end
+
+    Sidekiq.redis do |redis|
+      json_data = JSON.generate({ notifications: notifications, subscriptions: subscriptions, created_at: created_at, updated_at: updated_at })
+
+      redis.set "streams:#{ self.id }", json_data
+    end
+
+    self
+  end
+
+  def save!
+    @id ||= Digest::SHA1.hexdigest("#{ SecureRandom.uuid }#{ current_time_in_timezone.to_i }")
+
+    Sidekiq.redis do |redis|
+      raise StandardError, 'duplicate stream found' if !!(Sidekiq.redis do |redis| ; redis.get("streams:#{ id }"); end)
+
+      json_data = JSON.generate({ notifications: notifications, subscriptions: subscriptions, created_at: created_at, updated_at: updated_at })
+
+      redis.set "streams:#{ self.id }", json_data
+    end
+
+    self
+  end
+
   def self.delete(id)
     Sidekiq.redis do |redis|
       redis.del("streams:#{ id }")
@@ -42,8 +73,13 @@ class Stream
     end
   end
 
-  def alerts
-    return meta['alerts'] if meta && meta['updated_at']
+  def notifications
+    return meta['notifications'] if meta && meta['notifications']
+    []
+  end
+
+  def subscriptions
+    return meta['subscriptions'] if meta && meta['subscriptions']
     []
   end
 
@@ -95,23 +131,13 @@ class Stream
     EyeemWorker.perform_in eyeem_response[:retryAfter], { stream_id: id, image_name: image_name }
   end
 
-  def save!
-    @id ||= Digest::SHA1.hexdigest("#{ SecureRandom.uuid }#{ current_time_in_timezone.to_i }")
-
-    Sidekiq.redis do |redis|
-      raise StandardError, 'duplicate stream found' if !!(Sidekiq.redis do |redis| ; redis.get("streams:#{ id }"); end)
-
-      json_data = JSON.generate({ alerts: alerts, created_at: created_at, updated_at: updated_at })
-
-      redis.set "streams:#{ self.id }", json_data
-    end
-
-    self
-  end
-
   private
 
   def current_time_in_timezone
     Time.now.in_time_zone Rails.application.config_for(:app_config)['timezone']
+  end
+
+  def self.stream_empty?(stream_id)
+    (Sidekiq.redis do |redis| ; redis.keys("images:#{ stream_id }:*") ; end).empty?
   end
 end

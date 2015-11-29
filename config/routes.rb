@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   root 'application#index'
 
-  get  'stream/create'         => 'application#new_stream', as: :new_stream
-  get  'stream/record/(:name)' => 'application#stream',     as: :stream
-  post 'stream/record/(:name)' => 'application#record',     as: :record
-  get  'stream/play/(:name)'   => 'application#play',       as: :play
+  get  'new_stream'     => 'application#new_stream', as: :new_stream
+  get  'record/(:name)' => 'application#stream',     as: :stream
+  post 'record/(:name)' => 'application#record',     as: :record
+  get  'play/(:name)'   => 'application#play',       as: :play
+
+  post 'record/(:name)/update-alerts' => 'application#update_alerts', as: :update_alerts
 
   mount Sidekiq::Web, at: '/sidekiq'
 
