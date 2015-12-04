@@ -10,7 +10,7 @@ development:
   eyeem_api_token: PHOTOHACKDAY-MEGr4wo8UkMP4w
 
 production:
-  hostname: '52.16.88.238'
+  hostname: '52.30.181.83'
   port: 80
   timezone: 'Europe/Berlin'
   redis_host: redis://127.0.0.1:6379
